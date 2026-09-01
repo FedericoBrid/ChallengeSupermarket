@@ -35,6 +35,7 @@ public class Mapper {
         var detail = sale.getSaleDetail().stream().map(sd ->
             SaleDetailDTO.builder()
                     .id(sd.getId())
+                    .productId(sd.getProduct().getId())
                     .productName(sd.getProduct().getName())
                     .productAmount(sd.getProductAmount())
                     .price(sd.getPrice())

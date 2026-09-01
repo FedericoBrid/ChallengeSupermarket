@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Branch {
 
     @Id

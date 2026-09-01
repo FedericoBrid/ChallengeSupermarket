@@ -16,6 +16,7 @@ import lombok.*;
 public class SaleDetailDTO {
     private Long id;
     //product
+    private Long productId;
     private String productName;
     private Integer productAmount;
     private Double price;
