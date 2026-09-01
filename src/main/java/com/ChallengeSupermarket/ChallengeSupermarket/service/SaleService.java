@@ -90,11 +90,28 @@ public class SaleService implements ISaleService{
 
     @Override
     public SaleDTO updateSale(Long id, SaleDTO sale) {
-        return null;
+        Sale saleToUpdated = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
+        if (sale.getDate() != null) {
+            saleToUpdated.setDate(sale.getDate());
+        }
+        if (sale.getState() != null) {
+            saleToUpdated.setState(sale.getState());
+        }
+        if (sale.getTotal() != null) {
+            saleToUpdated.setTotal(sale.getTotal());
+        }
+        if (sale.getBranchId() != null) {
+            Branch branch = branchRepository.findById(sale.getBranchId())
+                    .orElseThrow(() -> new NotFoundException("Branch not found"));
+            saleToUpdated.setBranch(branch);
+        }
+        Sale updatedSale = saleRepository.save(saleToUpdated);
+        return Mapper.saleToDTO(updatedSale);
     }
 
     @Override
     public void deleteSale(Long id) {
-
+        Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
+        saleRepository.delete(sale);
     }
 }
