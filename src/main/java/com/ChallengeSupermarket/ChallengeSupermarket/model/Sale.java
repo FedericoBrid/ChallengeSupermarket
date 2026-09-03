@@ -25,6 +25,6 @@ public class Sale {
     private Branch branch;
 
     //apply bidirectionality: "a sale has many details."
-    @OneToMany (mappedBy = "sale")
+    @OneToMany (mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaleDetail> saleDetail = new ArrayList<>();
 }
