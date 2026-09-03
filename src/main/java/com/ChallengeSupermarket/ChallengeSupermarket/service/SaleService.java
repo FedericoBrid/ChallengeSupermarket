@@ -108,6 +108,36 @@ public class SaleService implements ISaleService{
                     .orElseThrow(() -> new NotFoundException("Branch not found"));
             saleToUpdated.setBranch(branch);
         }
+        if (sale.getSaleDetail() != null){
+            for (SaleDetailDTO detailDTO : sale.getSaleDetail()) {
+                SaleDetail detail = saleToUpdated.getSaleDetail()
+                        .stream()
+                        .filter(sd -> sd.getId().equals(detailDTO.getId()))
+                        .findFirst()
+                        .orElseThrow(() ->
+                                new NotFoundException("Sale detail not found")
+                        );
+                if (detailDTO.getProductId() != null) {
+                    Product product = productRepository.findById(detailDTO.getProductId())
+                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                    detail.setProduct(product);
+                }
+                if (detailDTO.getProductAmount() != null) {
+                    detail.setProductAmount(detailDTO.getProductAmount());
+                }
+                if (detailDTO.getPrice() != null) {
+                    detail.setPrice(detailDTO.getPrice());
+                }
+            }
+        }
+        Double totalCalculated = saleToUpdated.getSaleDetail()
+                .stream()
+                .map(detail ->
+                        detail.getPrice() * detail.getProductAmount()
+                )
+                .reduce(0.0, Double::sum);
+
+        saleToUpdated.setTotal(totalCalculated);
         Sale updatedSale = saleRepository.save(saleToUpdated);
         return Mapper.saleToDTO(updatedSale);
     }
