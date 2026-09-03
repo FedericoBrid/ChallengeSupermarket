@@ -18,7 +18,6 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +67,8 @@ public class SaleService implements ISaleService{
         //create sale details
         List<SaleDetail> saleDetailList = new ArrayList<>();
 
+        double totalCalculated = 0.0;
+
         for (SaleDetailDTO detail : sale.getSaleDetail()) {
 
             Product product = productRepository.findById(detail.getProductId())
@@ -81,9 +82,11 @@ public class SaleService implements ISaleService{
                     .build();
 
             saleDetailList.add(saleDetail);
+            totalCalculated = totalCalculated + (detail.getPrice() * detail.getProductAmount());
         }
 
         saleEntity.setSaleDetail(saleDetailList);
+        saleEntity.setTotal(totalCalculated);
         Sale savedSale = saleRepository.save(saleEntity);
         return Mapper.saleToDTO(savedSale);
     }
